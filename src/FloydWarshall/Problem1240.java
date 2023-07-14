@@ -1,9 +1,11 @@
+package FloydWarshall;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Main {
+public class Problem1240 {
 
     static int[][] graph;
     static final int INF=987654321;
