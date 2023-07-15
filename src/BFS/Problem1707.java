@@ -51,12 +51,13 @@ public class Problem1707 {
                 int a=Integer.parseInt(st.nextToken());
                 int b=Integer.parseInt(st.nextToken());
                 graph.get(a).add(b);
+                graph.get(b).add(a);
             }
 
             boolean check=true;
             for(int j=1;j<V+1;++j) {
-                if (color[i] == 0) {
-                    check = bfs(i);
+                if (color[j] == 0) {
+                    check = bfs(j);
                     if(check==false) {
                         break;
                     }
