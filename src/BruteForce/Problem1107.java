@@ -1,9 +1,17 @@
+// https://www.acmicpc.net/problem/1107
+// 리모컨, Gold5
+// 2023년 8월 14일
+// 통과
+
+package BruteForce;
+
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Main{
+public class Problem1107 {
     static int N,M;
     static ArrayList<Integer> arr = new ArrayList<Integer>();
     static int result[];
