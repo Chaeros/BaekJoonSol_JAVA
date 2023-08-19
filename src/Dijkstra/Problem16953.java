@@ -1,8 +1,15 @@
+// https://www.acmicpc.net/problem/16953
+// A->B, Silver2
+// 2023년 8월 19일
+// 통과
+
+package Dijkstra;
+
 import java.io.*;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-public class Main{
+public class Problem16953{
 
     static class Node implements Comparable<Node>{
         int index;
