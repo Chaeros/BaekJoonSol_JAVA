@@ -1,8 +1,15 @@
+// https://www.acmicpc.net/problem/1629
+// 곱셈, Silver1
+// 2023년 8월 20일
+// 통과
+
+package DvideAndConquer;
+
 import java.io.*;
 import java.math.BigInteger;
 import java.util.StringTokenizer;
 
-public class Main{
+public class Problem1629{
 
     static BigInteger zero = new BigInteger("0");
     static BigInteger one = new BigInteger("1");
