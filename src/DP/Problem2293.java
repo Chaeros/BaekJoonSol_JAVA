@@ -1,7 +1,7 @@
 // https://www.acmicpc.net/problem/2293
 // 동전 1, Gold5
 // 2023년 8월 26일
-// 미제출
+// 통과
 
 package DP;
 
@@ -18,25 +18,25 @@ public class Problem2293 {
         int k = Integer.parseInt(st.nextToken());
 
         int coin[] = new int[n];
-        int d[][] = new int[n][k+1];
-
-        for(int i=0;i<=k;++i){
-            d[0][i]=1;
-        }
+        int d[][] = new int[n+1][k+1];
 
         for(int i=0;i<n;++i){
             coin[i]=Integer.parseInt(br.readLine());
         }
 
-        for(int i=1;i<n;++i){
+        for(int i=0;i<=k;++i){
+            d[0][i]=0;
+        }
+
+        for(int i=1;i<=n;++i){
             d[i][0]=1;
             for(int j=1;j<=k;++j){
-                if(j>=coin[i]) d[i][j]=d[i][j-coin[i]]+d[i-1][j];
+                if(j>=coin[i-1]) d[i][j]=d[i][j-coin[i-1]]+d[i-1][j];
                 else d[i][j]=d[i-1][j];
             }
         }
 
-        for(int i=0;i<n;++i){
+        for(int i=0;i<=n;++i){
             for(int j=0;j<=k;++j){
                 System.out.print(d[i][j]+" ");
             }
@@ -44,7 +44,7 @@ public class Problem2293 {
         }
         System.out.println();
 
-        bw.write(d[n-1][k]+"\n");
+        bw.write(d[n][k]+"\n");
         bw.flush();
         bw.close();
     }
