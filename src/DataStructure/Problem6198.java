@@ -1,7 +1,14 @@
+// https://www.acmicpc.net/problem/6198
+// 옥상 정원 꾸미기, Gold5
+// 2023년 8월 28일
+// 통과
+
+package DataStructure;
+
 import java.io.*;
 import java.util.Stack;
 
-public class Main{
+public class Problem6198{
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
