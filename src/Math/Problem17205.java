@@ -1,6 +1,13 @@
+// https://www.acmicpc.net/problem/17205
+// 진우의 비밀번호, Gold5
+// 2023년 8월 31일
+// 통과
+
+package Math;
+
 import java.io.*;
 
-public class Main{
+public class Problem17205{
     public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
