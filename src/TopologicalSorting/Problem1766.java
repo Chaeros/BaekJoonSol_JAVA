@@ -1,9 +1,16 @@
+// https://www.acmicpc.net/problem/1766
+// 문제집, Gold2
+// 2023년 9월 1일
+// 통과
+
+package TopologicalSorting;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-public class Main{
+public class Problem1766{
     static int N,M;
     static ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
     static int indegree[];
