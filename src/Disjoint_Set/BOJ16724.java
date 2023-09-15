@@ -1,9 +1,16 @@
+// https://www.acmicpc.net/problem/16724
+// 피리 부는 사나이, Gold3
+// 2023년 9월 15일
+// 통과
+
+package Disjoint_Set;
+
 import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-public class Main{
+public class BOJ16724{
     static int N,M;
     static char graph[][];
     static boolean visited[][];
@@ -84,13 +91,6 @@ public class Main{
                 set.add(find_parent(i,j));
             }
         }
-
-//        for(int i=0;i<N;++i){
-//            for(int j=0;j<M;++j){
-//                System.out.print(find_parent(i,j)+" ");
-//            }
-//            System.out.println();
-//        }
 
         bw.write(set.size()+"\n");
         bw.flush();
