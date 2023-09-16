@@ -1,7 +1,14 @@
+// https://www.acmicpc.net/problem/11000
+// 강의실 배정, Gold5
+// 2023년 9월 16일
+// 통과
+
+package DataStructure;
+
 import java.io.*;
 import java.util.*;
 
-public class Main{
+public class BOJ11000{
     static class Node implements Comparable<Node>{
         int val;
         int sign;
