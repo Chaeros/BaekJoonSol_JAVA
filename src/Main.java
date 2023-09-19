@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main{
@@ -11,11 +12,14 @@ public class Main{
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
-        int a =1;
-        bw.write(a+"\n");
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        list.add(new ArrayList<>());
 
-        a=fun(a);
-        bw.write(a+"\n");
+        list.get(0).add(3);
+        bw.write(list.get(0).get(0)+"\n");
+
+        list.get(0).set(0,2);
+        bw.write(list.get(0).get(0)+"\n");
 
         bw.flush();
         bw.close();
