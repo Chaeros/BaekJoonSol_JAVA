@@ -1,6 +1,7 @@
 // https://www.acmicpc.net/problem/10250
 // 10250번 ACM 호텔 Bronze3
 // 2023년 7월 12일
+// 통과
 
 package Implementation;
 

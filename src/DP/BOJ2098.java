@@ -1,7 +1,14 @@
+// https://www.acmicpc.net/problem/2098
+// 외판원 순회, Gold1
+// 2023년 9월 24일
+// 통과
+
+package DP;
+
 import java.io.*;
 import java.util.StringTokenizer;
 
-public class Main{
+public class BOJ2098{
     static int N;
     static int graph[][];
     static int dp[][] = new int[17][1<<16];
