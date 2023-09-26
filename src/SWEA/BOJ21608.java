@@ -1,7 +1,14 @@
+// https://www.acmicpc.net/problem/21608
+// 상어 초등학교, Gold5
+// 2023년 9월 26일
+// 통과
+
+package SWEA;
+
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class BOJ21608 {
     static int N, nodeCnt;
     static int classRoom[][];
 
