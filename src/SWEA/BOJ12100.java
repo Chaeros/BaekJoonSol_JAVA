@@ -1,7 +1,7 @@
 // https://www.acmicpc.net/problem/12100
 // 2048, Gold2
 // 2023년 9월 18일
-// 미제출
+// 통과
 
 package SWEA;
 

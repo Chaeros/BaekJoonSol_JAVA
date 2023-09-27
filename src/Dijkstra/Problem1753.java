@@ -51,8 +51,7 @@ public class Problem1753 {
             if(distance[now]<temp.getCost()) continue;
 
             for(Node node:graph.get(now)){
-                if(distance[node.getObjective()]>
-                    distance[now]+node.getCost()){
+                if(distance[node.getObjective()]>distance[now]+node.getCost()){
                     distance[node.getObjective()]=distance[now]+node.getCost();
                     q.offer(new Node(node.getObjective(),distance[node.getObjective()]));
                 }
