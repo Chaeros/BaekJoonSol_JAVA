@@ -1,7 +1,7 @@
 // https://www.acmicpc.net/problem/14503
 // 로봇 청소기, Gold5
 // 2023년 9월 26일
-// 미제출
+// 통과
 
 package SWEA;
 
@@ -15,53 +15,44 @@ public class BOJ14503 {
     static int dx[] ={-1,0,1,0};
     static int dy[] ={0,1,0,-1};
     static int cleanArea=0;
-    static boolean turnOff=false;
 
-    static int mark=2;
+    static void sol(int row,int col,int direction){
 
-    static void dfs(int row,int col,int direction){
-        if(!visited[row][col]){
-            if(turnOff) return;
-//            System.out.println("row="+row+", "+"col="+col);
-            visited[row][col]=true;
-            ++cleanArea;
-
-            map[row][col]=mark++;
-            System.out.println("----------------------------------------------");
-            System.out.println("direction="+direction);
-            for(int i=0;i<N;++i){
-                for(int j=0;j<M;++j){
-                    System.out.printf("%3d",map[i][j]);
-                }
-                System.out.println();
+        while(true){
+            if(!visited[row][col]){
+                visited[row][col]=true;
+                ++cleanArea;
             }
-            System.out.println("----------------------------------------------");
 
-            for(int i=direction+4;i>direction;--i){
-                int mx = row+dx[i%4];
-                int my = col+dy[i%4];
+            boolean goAble=false;
+            for(int i=0;i<4;++i){
+                int mx = row+dx[i];
+                int my = col+dy[i];
 
                 if(mx<0 || mx>=N || my<0 || my>=M) continue;
-                if(map[mx][my]==0) dfs(mx,my,i%4);
+                if(map[mx][my]==0 && !visited[mx][my]) goAble=true;
+            }
+            if(!goAble){
+                row=row+dx[(direction+2)%4];
+                col=col+dy[(direction+2)%4];
+                if(map[row][col]==1) break;
+                continue;
+            }
 
-                boolean goAble=false;
-                for(int j=0;j<4;++j){
-                    int mx2 = row+dx[j];
-                    int my2 = col+dy[j];
+            for(int i=0;i<4;++i){
+                direction=(direction+3)%4;
+                int mx = row+dx[direction];
+                int my = col+dy[direction];
 
-                    if(map[mx2][my2]==0 && visited[mx2][my2]==false) goAble=true;
+                if(map[mx][my]==0 && !visited[mx][my]){
+                    row=mx;
+                    col=my;
+                    break;
                 }
-                if(!goAble && map[row+dx[(direction+2)%4]][col+dy[(direction+2)%4]]==1){
-                    turnOff=true;
-                    return;
-                }
-
-//                if(i==direction+1 && map[row+dx[(i+1)%4]][col+dy[(i+1)%4]]==1){
-//                    turnOff=true;
-//                    return;
-//                }
             }
         }
+
+
     }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -86,15 +77,7 @@ public class BOJ14503 {
             }
         }
 
-//        System.out.println("r="+r+", c="+c);
-//        for(int i=0;i<N;++i){
-//            for(int j=0;j<M;++j){
-//                System.out.print(map[i][j]+" ");
-//            }
-//            System.out.println();
-//        }
-
-        dfs(r,c,direction);
+        sol(r,c,direction);
 
         bw.write(cleanArea+"\n");
         bw.flush();
