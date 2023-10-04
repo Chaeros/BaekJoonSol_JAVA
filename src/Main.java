@@ -5,15 +5,16 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int sum=0;
-        for(int i=0;i<4;++i){
-            sum+=Integer.parseInt(br.readLine());
+        int a = Integer.parseInt(br.readLine());
+        int b = Integer.parseInt(br.readLine());
+        int c = Integer.parseInt(br.readLine());
+
+        if(a+b+c==180){
+            if(a==b && b==c) bw.write("Equilateral\n");
+            else if(a==b || a==c || b==c) bw.write("Isosceles\n");
+            else bw.write("Scalene\n");
         }
-
-        int minute=sum/60;
-        int seconds=sum%60;
-
-        bw.write(minute+"\n"+seconds+"\n");
+        else bw.write("Error\n");
         bw.flush();
         bw.close();
     }

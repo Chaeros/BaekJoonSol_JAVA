@@ -7,11 +7,10 @@ package SWEA;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-public class BOJ21610 {
+public class BOJ21610_2 {
     static int N,M;
     static int map[][];
     static class Position{
@@ -33,8 +32,6 @@ public class BOJ21610 {
     static int dy2[] = {-1,1,1,-1};
 
     static List<Position> cloudList = new ArrayList<>();
-    static boolean isCloud[][];
-    static List<Position> ignoreList = new ArrayList<>();
 
     static void func(){
 
@@ -45,57 +42,45 @@ public class BOJ21610 {
 
             boolean isRained[][]= new boolean[N][N];
 
-//            System.out.println("direction="+direction+" distance="+distance);
 
             for(Position cloud:cloudList){
 
                 int mx = cloud.row+(dx[direction]*distance);
                 int my = cloud.col+(dy[direction]*distance);
 
-//                System.out.println("pre mx="+mx+" pre my="+my);
-
                 if(mx<0) mx = N+mx;
                 else mx%=N;
                 if(my<0) my = N+my;
                 else my%=N;
 
-//                System.out.println("x="+cloud.row+" y="+cloud.col);
-//                System.out.println("mx="+mx+" my="+my);
-
                 map[mx][my]++;
-                ignoreList.add(new Position(mx,my));
+                isRained[mx][my]=true;
             }
-//            System.out.println("<<배 내린 후>>");
-//            printMap();
             cloudList.clear();
 
-            for(Position position:ignoreList){
-                for(int j=0;j<4;++j){
-                    int mx = position.row + dx2[j];
-                    int my = position.col + dy2[j];
+            for(int r=0;r<N;++r){
+                for(int c=0;c<N;++c){
+                    if(isRained[r][c]){
+                        for(int j=0;j<4;++j){
+                            int mx = r + dx2[j];
+                            int my = c + dy2[j];
 
-                    if(mx<0 || mx>=N || my<0 || my>=N) continue;
-                    if(map[mx][my]!=0) map[position.row][position.col]++;
-                }
-            }
-//            System.out.println("<<대각선 개수 확인후 증가>>");
-//            printMap();
-
-            for(int row=0;row<N;++row){
-                outter : for(int col=0;col<N;++col){
-                    for(Position position:ignoreList){
-                        if(row== position.row && col== position.col){
-                            continue outter;
+                            if(mx<0 || mx>=N || my<0 || my>=N) continue;
+                            if(map[mx][my]!=0) map[r][c]++;
                         }
                     }
-                    if(map[row][col]>=2){
+                }
+            }
+
+            for(int row=0;row<N;++row){
+                for(int col=0;col<N;++col){
+                    if(!isRained[row][col] && map[row][col]>=2){
                         cloudList.add(new Position(row,col));
                         map[row][col]-=2;
                     }
+
                 }
             }
-            ignoreList.clear();
-//            printMap();
         }
     }
 
@@ -108,18 +93,6 @@ public class BOJ21610 {
         }
         return sum;
     }
-
-    static void printMap(){
-        System.out.println("===============================");
-        for(int i=0;i<N;++i){
-            for(int j=0;j<N;++j){
-                System.out.print(map[i][j]+" ");
-            }
-            System.out.println();
-        }
-        System.out.println("===============================");
-    }
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -149,8 +122,6 @@ public class BOJ21610 {
         cloudList.add(new Position(N-1,1));
         cloudList.add(new Position(N-2,0));
         cloudList.add(new Position(N-2,1));
-
-//        printMap();
 
         func();
 
