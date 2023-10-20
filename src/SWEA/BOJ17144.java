@@ -1,119 +1,159 @@
 // https://www.acmicpc.net/problem/17144
 // 미세먼지 안녕, Gold4
-// 2023년 10월 16일
+// 2023년 10월 19일
+// 통과
 
 package SWEA;
 
+
 import java.io.*;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class BOJ17144 {
-    static int N;
+    static int R,C,T;
     static int map[][];
+    static int airConditioner1[] = new int[2];
+    static int airConditioner2[] = new int[2];
 
     static int dx[] = {-1,0,1,0};
     static int dy[] = {0,1,0,-1};
 
-    static int shark_x,shark_y,shark_size=2;
-    static int sum=0;
+    static boolean visited[][];
+    static int tempMap[][];
 
-    static class Node{
-        int x;
-        int y;
+    static void spread(int r, int c){
+        visited[r][c] = true;
+        int val = map[r][c]/5;
 
-        public Node(int x, int y) {
-            this.x = x;
-            this.y = y;
+        for(int i=0;i<4;++i){
+            int mx = r+dx[i];
+            int my = c+dy[i];
+
+            if(mx<0 || mx>=R || my<0 || my>=C) continue;
+            if(map[mx][my]==-1) continue;
+
+            tempMap[mx][my]+=val;
+            tempMap[r][c]-=val;
         }
     }
-    static int[][] bfs(){
-        Queue<BOJ16236.Node> q = new LinkedList<>();
-        int visited[][] = new int[N][N];
-        for(int i=0;i<N;++i){
-            Arrays.fill(visited[i],-1);
+
+    static void runConditioner(){
+
+        // 윗쪽 공기청정기 왼쪽
+        for(int i=airConditioner1[0]-2;i>=0;--i){
+            map[i+1][0]=map[i][0];
         }
-        visited[shark_x][shark_y]=0;
-        q.offer(new BOJ16236.Node(shark_x,shark_y));
 
-        while(!q.isEmpty()){
-            BOJ16236.Node now = q.poll();
+        // 윗쪽 공기청정기 윗쪽
+        for(int i=0;i<C-1;++i){
+            map[0][i]=map[0][i+1];
+        }
 
-            for(int i=0;i<4;++i){
-                int nx = now.x+dx[i];
-                int ny = now.y+dy[i];
+        // 윗쪽 공기청정기 오른쪽
+        for(int i=0;i<airConditioner1[0];++i){
+            map[i][C-1]=map[i+1][C-1];
+        }
 
-                if(nx<0 || nx>=N || ny<0 || ny>=N) continue;
+        // 윗쪽 공기청정기 아랫쪽
+        for(int i=C-1;i>1;--i){
+            map[airConditioner1[0]][i]=map[airConditioner1[0]][i-1];
+        }
+        map[airConditioner1[0]][1]=0;
 
-                if(map[nx][ny]<=shark_size && visited[nx][ny]==-1){
-                    visited[nx][ny]=visited[now.x][now.y]+1;
-                    q.offer(new BOJ16236.Node(nx,ny));
-                }
+        // =========================================================
+        // 아랫쪽 공기청정기 왼쪽
+        for(int i=airConditioner2[0]+2;i<=R-1;++i){
+            map[i-1][0]=map[i][0];
+        }
+
+        // 아랫쪽 공기청정기 아랫쪽
+        for(int i=0;i<C-1;++i){
+            map[R-1][i]=map[R-1][i+1];
+        }
+
+        // 아랫쪽 공기청정기 오른쪽
+        for(int i=R-1;i>airConditioner2[0];--i){
+            map[i][C-1]=map[i-1][C-1];
+        }
+
+        // 아랫쪽 공기청정기 윗쪽
+        for(int i=C-1;i>1;--i){
+            map[airConditioner2[0]][i]=map[airConditioner2[0]][i-1];
+        }
+        map[airConditioner2[0]][1]=0;
+    }
+
+    static int dustSum(){
+        int sum=2;
+
+        for(int r=0;r<R;++r){
+            for(int c=0;c<C;++c){
+                sum+=map[r][c];
             }
         }
 
-        return visited;
+        return sum;
     }
 
-    static boolean sol(int visited[][]){
-        int minDistance=Integer.MAX_VALUE;
-        for(int i=0;i<N;++i){
-            for(int j=0;j<N;++j){
-                if(visited[i][j]>0){
-                    if(minDistance>visited[i][j] && map[i][j]<shark_size && map[i][j]>0){
-                        minDistance=visited[i][j];
-                        shark_x=i;
-                        shark_y=j;
+    static void printMap(){
+        for(int r=0;r<R;++r){
+            for(int c=0;c<C;++c){
+                System.out.print(map[r][c]+" ");
+            }
+            System.out.println();
+        }
+        System.out.println("=======================");
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        T = Integer.parseInt(st.nextToken());
+
+        map = new int[R][C];
+
+        int index=0;
+        for(int r=0;r<R;++r){
+            st = new StringTokenizer(br.readLine());
+            for(int c=0;c<C;++c){
+                map[r][c]=Integer.parseInt(st.nextToken());
+                if(map[r][c]==-1){
+                    if(index==0){
+                        airConditioner1[0]=r;
+                        airConditioner1[1]=c;
+                        index++;
+                    }
+                    else{
+                        airConditioner2[0]=r;
+                        airConditioner2[1]=c;
                     }
                 }
             }
         }
-        if(minDistance==Integer.MAX_VALUE){
-            return false;
-        }
-        else{
-            map[shark_x][shark_y]=0;
-            sum+=minDistance;
-            return true;
-        }
-    }
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st;
 
-        N = Integer.parseInt(br.readLine());
+        for(int t=0;t<T;++t){
+            tempMap = new int[R][C];
+            visited = new boolean[R][C];
+            for(int r=0;r<R;++r){
+                tempMap[r]=map[r].clone();
+            }
 
-        map = new int[N][N];
-        for(int i=0;i<N;++i){
-            st = new StringTokenizer(br.readLine());
-            for(int j=0;j<N;++j){
-                map[i][j]=Integer.parseInt(st.nextToken());
-                if(map[i][j]==9){
-                    shark_x=i;
-                    shark_y=j;
-                    map[i][j]=0;
+            for(int r=0;r<R;++r){
+                for(int c=0;c<C;++c){
+                    spread(r,c);
                 }
             }
+            map=tempMap;
+//            printMap();
+
+            runConditioner();
         }
 
-        int eating=0;
-        while(true){
-            if(!sol(bfs())){
-                break;
-            }
-            else{
-                ++eating;
-            }
-
-            if(eating==shark_size){
-                ++shark_size;
-                eating=0;
-            }
-        }
-        bw.write(sum+"\n");
+        bw.write(dustSum()+"\n");
         bw.flush();
         bw.close();
     }
