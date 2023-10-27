@@ -1,20 +1,20 @@
 import java.io.*;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int a = Integer.parseInt(br.readLine());
-        int b = Integer.parseInt(br.readLine());
-        int c = Integer.parseInt(br.readLine());
-
-        if(a+b+c==180){
-            if(a==b && b==c) bw.write("Equilateral\n");
-            else if(a==b || a==c || b==c) bw.write("Isosceles\n");
-            else bw.write("Scalene\n");
+        int arr[] = new int[3];
+        for(int i=0;i<3;++i){
+            arr[i]=Integer.parseInt(st.nextToken());
         }
-        else bw.write("Error\n");
+        Arrays.sort(arr);
+
+        bw.write(arr[1]+"\n");
         bw.flush();
         bw.close();
     }
