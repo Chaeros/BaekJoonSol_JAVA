@@ -1,21 +1,22 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.StringTokenizer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int arr[] = new int[3];
-        for(int i=0;i<3;++i){
-            arr[i]=Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(br.readLine());
+
+        for(int i=0;i<N;++i){
+            for(int j=0;j<=i;++j){
+                System.out.print("*");
+            }
+            System.out.println();
         }
-        Arrays.sort(arr);
-
-        bw.write(arr[1]+"\n");
-        bw.flush();
-        bw.close();
+        for(int i=N-1;i>0;--i){
+            for(int j=i;j>0;--j){
+                System.out.print("*");
+            }
+            System.out.println();
+        }
     }
 }

@@ -6,12 +6,12 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class BOJ1939 {
-
     static int N,M;
     static ArrayList<LinkedList<Node>> list = new ArrayList<>();
 
+
     static int binarySearch(int a,int b,int c){
-        int result=0;
+        int result=-1;
         int start=0;
         int end=list.get(a).size();
 
@@ -25,12 +25,16 @@ public class BOJ1939 {
                     break;
                 }
             }
+
             if(list.get(a).get(mid).objective<b){
-
+                start = mid+1;
+                result = start;
             }
-
+            else if(list.get(a).get(mid).objective>b){
+                end = mid-1;
+                result = start;
+            }
         }
-
         return result;
     }
 
@@ -68,12 +72,20 @@ public class BOJ1939 {
             int b = Integer.parseInt(st.nextToken());
             int c = Integer.parseInt(st.nextToken());
 
-            if(binarySearch(a,b,c)>-1){
+            if(binarySearch(a,b,c)==-1){
                 list.get(a).add(new Node(b,c));
                 list.get(b).add(new Node(a,c));
             }
+            else{
+
+            }
         }
 
-
+        st = new StringTokenizer(br.readLine());
+        int a = Integer.parseInt(st.nextToken());
+        int b = Integer.parseInt(st.nextToken());
+        bw.write(list.get(a).get(b).weight+"\n");
+        bw.flush();
+        bw.close();
     }
 }
