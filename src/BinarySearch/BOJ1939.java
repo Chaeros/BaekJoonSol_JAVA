@@ -9,30 +9,32 @@ public class BOJ1939 {
     static int N,M;
     static ArrayList<LinkedList<Node>> list = new ArrayList<>();
 
+    static boolean isAdd=false;
 
     static int binarySearch(int a,int b,int c){
-        int result=-1;
+        int result=0;
         int start=0;
-        int end=list.get(a).size();
+        int end=list.get(a).size()-1;
 
         while(start<=end){
             int mid = (start+end)/2;
 
             if(list.get(a).get(mid).objective==b){
                 if(list.get(a).get(mid).weight<c){
-                    list.get(a).set(mid,new Node(list.get(a).get(mid).objective,c));
+                    list.get(a).set(mid,new Node(b,c));
                     result = mid;
+                    isAdd=true;
                     break;
                 }
             }
 
             if(list.get(a).get(mid).objective<b){
                 start = mid+1;
-                result = start;
+                result = mid;
             }
             else if(list.get(a).get(mid).objective>b){
                 end = mid-1;
-                result = start;
+                result = mid;
             }
         }
         return result;
@@ -72,19 +74,24 @@ public class BOJ1939 {
             int b = Integer.parseInt(st.nextToken());
             int c = Integer.parseInt(st.nextToken());
 
-            if(binarySearch(a,b,c)==-1){
-                list.get(a).add(new Node(b,c));
-                list.get(b).add(new Node(a,c));
+            isAdd=false;
+            int val = binarySearch(a,b,c);
+            if(!isAdd){
+                list.get(a).add(val, new Node(b,c));
+                list.get(b).add(val, new Node(a,c));
             }
-            else{
 
-            }
         }
 
         st = new StringTokenizer(br.readLine());
         int a = Integer.parseInt(st.nextToken());
         int b = Integer.parseInt(st.nextToken());
-        bw.write(list.get(a).get(b).weight+"\n");
+        for(int i=0;i<list.get(a).size();++i){
+            if(list.get(a).get(i).objective==b){
+                bw.write(list.get(a).get(i).weight+"\n");
+                break;
+            }
+        }
         bw.flush();
         bw.close();
     }
