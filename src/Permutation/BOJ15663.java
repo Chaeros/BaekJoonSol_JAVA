@@ -1,6 +1,7 @@
 // https://www.acmicpc.net/problem/15663
 // N과 M (9), Silver2
 // 2023년 11월 4일
+// 통과
 
 package Permutation;
 
@@ -9,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,29 +21,36 @@ public class BOJ15663 {
     static int N,M;
     static int arr[];
     static int result[];
+    static boolean check[];
 
-    static Set<int[]> set = new HashSet<>();
+    static Set<ArrayList<Integer>> set = new HashSet<>();
 
     static void print(){
-        if(set.contains(result)) return;
-        set.add(result);
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i=0;i<N;++i){
+            list.add(result[i]);
+        }
+        if(set.contains(list)) return;
+        set.add(list);
         for(int i=0;i<M;++i){
             System.out.print(result[i]+" ");
         }
         System.out.println();
     }
 
-    static void dfs(int index,int depth){
+    static void dfs(int depth){
         if(depth==M){
             print();
             return;
         }
 
-        int last =0;
-        for(int i=index;i<N;++i){
-            result[depth] = arr[i];
-            last = arr[i];
-            dfs(i+1,depth+1);
+        for(int i=0;i<N;++i){
+            if(!check[i]){
+                check[i]=true;
+                result[depth] = arr[i];
+                dfs(depth+1);
+                check[i] = false;
+            }
         }
     }
 
@@ -55,6 +64,7 @@ public class BOJ15663 {
 
         arr = new int[N];
         result = new int[N];
+        check = new boolean[N];
 
         st = new StringTokenizer(br.readLine());
         for(int i=0;i<N;++i){
@@ -62,6 +72,6 @@ public class BOJ15663 {
         }
         Arrays.sort(arr);
 
-        dfs(0,0);
+        dfs(0);
     }
 }
