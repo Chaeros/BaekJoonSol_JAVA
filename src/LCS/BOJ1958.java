@@ -1,3 +1,8 @@
+// https://www.acmicpc.net/problem/1958
+// LCS3, Gold4
+// 2023년 11월 11일
+// 통과
+
 package LCS;
 
 import java.io.*;
