@@ -1,27 +1,25 @@
-import java.io.*;
-import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st;
 
-        int N = Integer.parseInt(br.readLine());
-        int arr[] = new int[N];
-        st = new StringTokenizer(br.readLine());
-        for(int i=0;i<N;++i){
-                arr[i]=Integer.parseInt(st.nextToken());
+        while(true) {
+            String S = br.readLine().toUpperCase();
+            int count = 0;
+
+            if(S.equals("#")) break;
+
+            for(int i = 0; i < S.length(); i++) {
+                if(S.charAt(i) == 'A' || S.charAt(i) == 'E'
+                        || S.charAt(i) == 'I' || S.charAt(i) == 'O'
+                        || S.charAt(i) == 'U') count++;
+            }
+            System.out.println(count);
         }
-
-        int M = Integer.parseInt(br.readLine());
-        int result = 0;
-        for(int i=0;i<N;++i){
-            if(arr[i]==M) ++result;
-        }
-
-        bw.write(result+"\n");
-        bw.flush();
-        bw.close();
     }
+
 }
