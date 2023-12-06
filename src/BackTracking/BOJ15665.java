@@ -1,23 +1,40 @@
+// https://www.acmicpc.net/problem/15665
+// N과 M(11), Silver2
+// 2023년 12월 7일
+// 통과
+
 package BackTracking;
 
 import java.io.*;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class BOJ15665 {
 
     static int N,M;
     static int arr[];
-    static int result[];
+    static ArrayList<Integer> list = new ArrayList<>();
+    static Set<List<Integer>> set = new HashSet<>();
 
-    static void dfs(int index,int depth){
+    static StringBuilder sb = new StringBuilder();
+
+    static void dfs(int depth){
         if(depth==M){
 
+            if(!set.contains(list)){
+                set.add(list);
+
+                for(int x:list){
+                    sb.append(x+" ");
+                }
+                sb.append("\n");
+            }
             return;
         }
 
-        for(int i=index;i<N;++i){
-            result[i]=arr[i];
-            dfs(i,depth+1);
+        for(int i=0;i<N;++i){
+            list.add(arr[i]);
+            dfs(depth+1);
+            list.remove(depth);
         }
     }
 
@@ -32,12 +49,14 @@ public class BOJ15665 {
         st = new StringTokenizer(br.readLine());
 
         arr = new int[st.countTokens()];
-        result = new int[st.countTokens()];
         int i=0;
         while(st.hasMoreTokens()){
             arr[i]=Integer.parseInt(st.nextToken());
             i++;
         }
+        Arrays.sort(arr);
 
+        dfs(0);
+        System.out.println(sb);
     }
 }
