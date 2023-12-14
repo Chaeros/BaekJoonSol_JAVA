@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 
 public class BOJ15685 {
 
-    public static ArrayList<ArrayList<ArrayList<Integer>>> map = new ArrayList<>();
+    public static ArrayList<ArrayList<Integer>> map = new ArrayList<>();
 
     public static class Position{
         int x;
@@ -22,6 +22,10 @@ public class BOJ15685 {
         }
     }
 
+    public static ArrayList<Position> list;
+    public static void rotate(){
+
+    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -31,13 +35,13 @@ public class BOJ15685 {
         for(int i=0;i<=100;++i){
             map.add(new ArrayList<>());
             for(int j=0;j<=100;++j){
-                map.get(i).add(new ArrayList<>());
+                map.get(i).add(0);
             }
         }
 
         int N = Integer.parseInt(br.readLine());
         for(int i=0;i<N;++i){
-            ArrayList<Position> list = new ArrayList<>();
+            list = new ArrayList<>();
 
             st = new StringTokenizer(br.readLine());
             int x = Integer.parseInt(st.nextToken());
@@ -45,7 +49,22 @@ public class BOJ15685 {
             int d = Integer.parseInt(st.nextToken());
             int g = Integer.parseInt(st.nextToken());
 
+            int endX = x, endY=y;
+
+            if(d==0){
+                endX=x+1;
+            }
+            else if(d==1){
+                endY=y+1;
+            }
+            else if(d==2){
+                endX=x-1;
+            }
+            else if(d==3){
+                endY=y-1;
+            }
             list.add(new Position(x,y));
+            list.add(new Position(endX,endY));
         }
     }
 }
