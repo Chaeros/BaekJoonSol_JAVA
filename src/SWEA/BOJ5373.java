@@ -6,10 +6,8 @@
 package SWEA;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class BOJ5373 {
@@ -449,7 +447,6 @@ public class BOJ5373 {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
 
         int T = Integer.parseInt(br.readLine());
@@ -460,10 +457,7 @@ public class BOJ5373 {
             while(st.hasMoreTokens()){
                 String command = st.nextToken();
                 rotate(command.charAt(0),command.charAt(1));
-//                System.out.println("[0]="+command.charAt(0)+" [1]="+command.charAt(1));
-//                printUpSide();
             }
-//            System.out.println("===result===");
             printUpSide();
         }
     }
