@@ -386,9 +386,6 @@ public class BOJ13460 {
             }
         }
 
-//        System.out.println("[init]"+originRedBallPosition[0]+" "+originRedBallPosition[1]);
-//        System.out.println("[init]"+originBlueBallPosition[0]+" "+originBlueBallPosition[1]);
-
         for(int i=1;i<=10;++i){
             maxCount=i;
             init();
