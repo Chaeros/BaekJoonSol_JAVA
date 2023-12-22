@@ -25,9 +25,10 @@ public class BOJ16235 {
             if(this.age<o.age){
                 return -1;
             }
-            else{
+            else if(this.age>o.age){
                 return 1;
             }
+            else return 0;
         }
     }
 
@@ -63,18 +64,16 @@ public class BOJ16235 {
         for(int i=0;i<K;++i){
             //Spring
             ArrayList<Wood> removeWoodList = new ArrayList<>();
-            for(int w=0;w<woodList.size();){
-                int x=woodList.get(w).x;
-                int y=woodList.get(w).y;
-                int age=woodList.get(w).age;
-                if(groundNourishment[x][y]>=age){
-                    groundNourishment[x][y]-=age;
-                    woodList.get(w).age++;
-                    ++w;
+            Iterator<Wood> iterator = woodList.iterator();
+            while(iterator.hasNext()){
+                Wood wood= iterator.next();
+                if(groundNourishment[wood.x][wood.y]>=wood.age){
+                    groundNourishment[wood.x][wood.y]-=wood.age;
+                    wood.age++;
                 }
                 else{
-                    removeWoodList.add(new Wood(x,y,age));
-                    woodList.remove(w);
+                    removeWoodList.add(wood);
+                    iterator.remove();
                 }
             }
 
@@ -84,18 +83,19 @@ public class BOJ16235 {
             }
 
             //Fall
-            ArrayList<Wood> tempWoodList = new ArrayList<>(woodList);
-            for(Wood wood:tempWoodList){
+            LinkedList<Wood> childWood = new LinkedList<>();
+            for(Wood wood:woodList){
                 if(wood.age%5==0){
                     for(int a=0;a<8;++a){
                         int mx = wood.x+dx[a];
                         int my = wood.y+dy[a];
 
                         if(mx<0 || mx>=N || my<0 || my>=N) continue;
-                        woodList.add(0,new Wood(mx,my,1));
+                        childWood.add(new Wood(mx,my,1));
                     }
                 }
             }
+            woodList.addAll(0,childWood);
 
             //Winter
             for(int r=0;r<N;++r){
