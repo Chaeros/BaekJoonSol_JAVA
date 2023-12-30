@@ -1,6 +1,7 @@
 // https://www.acmicpc.net/problem/21609
 // 상어 중학교, Gold2
-// 2023년 12월 25일
+// 2023년 12월 29일
+// 통과
 
 package 삼성기출;
 
@@ -72,7 +73,7 @@ public class BOJ21609 {
     static void printMap(){
         for(int i=0;i<N;++i){
             for(int j=0;j<N;++j){
-                System.out.print(map[i][j]+" ");
+                System.out.printf("%2d ",map[i][j]);
             }
             System.out.println();
         }
@@ -87,8 +88,8 @@ public class BOJ21609 {
         Queue<Position> q = new LinkedList<>();
         q.offer(new Position(r,c));
         int tempRainbowBlockSize=0;
-        int tempStandardRow=N-1;
-        int tempStandardCol=N-1;
+        int tempStandardRow=r;
+        int tempStandardCol=c;
         visited[r][c]=true;
         List<Position> list = new ArrayList<>();
         List<Position> rainbowList = new ArrayList<>();
@@ -110,8 +111,8 @@ public class BOJ21609 {
                     tempRainbowBlockSize++;
                     rainbowList.add(new Position(mx,my));
                 }
-                
-                if(map[mx][my]!=0){
+
+                if(map[mx][my]==standardBlock){
                     if(tempStandardRow>mx){
                         tempStandardRow=mx;
                         tempStandardCol=my;
@@ -130,7 +131,9 @@ public class BOJ21609 {
             }
         }
 
-        if(blockSize<2) return blockSize;
+        if(blockSize<2){
+            return blockSize;
+        }
 
         for(Position position:rainbowList){
             visited[position.row][position.col]=false;
@@ -138,24 +141,28 @@ public class BOJ21609 {
 
         if(blockSet.size()<list.size()){
             blockSet=new ArrayList<>(list);
+            rainbowBlockSize=tempRainbowBlockSize;
             standardRow=tempStandardRow;
             standardCol=tempStandardCol;
         }
         else if(blockSet.size()==list.size()){
             if(rainbowBlockSize<tempRainbowBlockSize){
                 blockSet=new ArrayList<>(list);
+                rainbowBlockSize=tempRainbowBlockSize;
                 standardRow=tempStandardRow;
                 standardCol=tempStandardCol;
             }
             else if(rainbowBlockSize==tempRainbowBlockSize){
                 if(standardRow<tempStandardRow){
                     blockSet=new ArrayList<>(list);
+                    rainbowBlockSize=tempRainbowBlockSize;
                     standardRow=tempStandardRow;
                     standardCol=tempStandardCol;
                 }
                 else if(standardRow==tempStandardRow){
                     if(standardCol<tempStandardCol){
                         blockSet=new ArrayList<>(list);
+                        rainbowBlockSize=tempRainbowBlockSize;
                         standardRow=tempStandardRow;
                         standardCol=tempStandardCol;
                     }
@@ -200,21 +207,6 @@ public class BOJ21609 {
             gravity();
             rotate();
             gravity();
-
-//            System.out.println("=================origin=============");
-//            printMap();
-//            removeBlock();
-//            System.out.println("=================revmoe=============");
-//            printMap();
-//            gravity();
-//            System.out.println("=================gravty=============");
-//            printMap();
-//            rotate();
-//            System.out.println("=================rotate=============");
-//            printMap();
-//            gravity();
-//            System.out.println("=================gravity=============");
-//            printMap();
         }
 
         bw.write(totalScore+"\n");
