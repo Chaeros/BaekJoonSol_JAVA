@@ -11,7 +11,7 @@ public class BOJ19236 {
     static class Shark{
         int number;
         int direction;
-        
+
     }
 
     public static void main(String[] args) throws IOException {
