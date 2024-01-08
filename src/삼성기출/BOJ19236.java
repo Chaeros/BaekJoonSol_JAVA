@@ -32,11 +32,9 @@ public class BOJ19236 {
         }
     }
 
-    static ArrayList<Fish> fishes = new ArrayList<>();
     static int maxSum=0;
     static int dx[]={-1,-1,0,1,1,1,0,-1};
     static int dy[]={0,-1,-1,-1,0,1,1,1};
-
 
     static ArrayList<Fish> copyFishes(ArrayList<Fish> fishes){
         ArrayList<Fish> tempFishes = new ArrayList<>();
@@ -47,27 +45,38 @@ public class BOJ19236 {
     static int[][] copyMap(int[][] map){
         int tempMap[][] = new int[4][4];
         for(int i=0;i<4;++i){
-            tempMap[i]=map[i].clone();
+            System.arraycopy(map[i],0,tempMap[i],0,map[i].length);
         }
         return tempMap;
+    }
+
+    static void printMap(int[][] map){
+        System.out.println("================");
+        for(int i=0;i<4;++i){
+            for(int j=0;j<4;++j){
+                System.out.print(map[i][j]+" ");
+            }
+            System.out.println();
+        }
+        System.out.println("================");
     }
 
     static void dfs(Shark shark,int map[][],ArrayList<Fish> fishes){
         if(maxSum<shark.eatingSum){
             maxSum=shark.eatingSum;
+            System.out.println("[x="+shark.x+" y="+shark.y+"] maxSum="+maxSum);
         }
 
-        ArrayList<Fish> tempFishes = copyFishes(fishes);
-        int[][] tempMap = copyMap(map);
-        moveFishes(fishes,map);
-
-        Shark tempShark = new Shark(shark.x,shark.y,shark.direction,shark.eatingSum);
-
         for(int i=1;i<=3;++i){
+            ArrayList<Fish> tempFishes = copyFishes(fishes);
+            int[][] tempMap = copyMap(map);
+            tempFishes = moveFishes(tempFishes,tempMap);
+            Shark tempShark = new Shark(shark.x,shark.y,shark.direction,shark.eatingSum);
+
             int mx = tempShark.x+dx[tempShark.direction]*i;
             int my = tempShark.y+dy[tempShark.direction]*i;
 
-            if(mx>=0 && mx<4 && my>=0 && my<4 && map[mx][my]>0){
+            if(mx>=0 && mx<4 && my>=0 && my<4 && tempMap[mx][my]>0){
                 tempMap[tempShark.x][tempShark.y]=0;
                 tempShark.eatingSum+=tempMap[mx][my];
                 Fish fish = tempFishes.get(tempMap[mx][my]-1);
@@ -75,7 +84,9 @@ public class BOJ19236 {
                 tempMap[mx][my]=-1;
                 tempShark.x=mx;
                 tempShark.y=my;
+                tempShark.direction=fish.direction;
 
+                printMap(tempMap);
                 dfs(tempShark,tempMap,tempFishes);
             }
         }
@@ -88,12 +99,14 @@ public class BOJ19236 {
             if(!fishes.get(i).isAlive) continue;
 
             for(int j=0;j<8;++j){
-                int mx = fish.x+dx[j];
-                int my = fish.y+dy[j];
+//                System.out.println("rotate="+(fish.direction+j)%8);
+                int mx = fish.x+dx[(fish.direction+j)%8];
+                int my = fish.y+dy[(fish.direction+j)%8];
 
                 if(mx<0 || mx>=4 || my<0 || my>=4 || map[mx][my]==-1) continue;
 
                 if(map[mx][my]==0){
+                    map[fish.x][fish.y]=0;
                     map[mx][my]=fish.number;
                     fish.x=mx;
                     fish.y=my;
@@ -103,9 +116,9 @@ public class BOJ19236 {
                     fish2.x=fish.x;
                     fish2.y=fish.y;
                     map[mx][my]=fish.number;
+                    map[fish.x][fish.y]=fish2.number;
                     fish.x=mx;
                     fish.y=my;
-                    map[fish.x][fish.y]=fish2.number;
                 }
                 break;
             }
@@ -125,7 +138,7 @@ public class BOJ19236 {
             st = new StringTokenizer(br.readLine());
             for(int j=0;j<4;++j){
                 int number = Integer.parseInt(st.nextToken());
-                int direction = Integer.parseInt(st.nextToken());
+                int direction = Integer.parseInt(st.nextToken())-1;
                 fishes.add(new Fish(i,j,number,direction,true));
                 map[i][j]=number;
             }
@@ -137,6 +150,9 @@ public class BOJ19236 {
                 return o1.number-o2.number;
             }
         });
+
+        System.out.println("originMap>>");
+        printMap(map);
 
         Fish fish = fishes.get(map[0][0]-1);
         Shark shark = new Shark(0,0,fish.direction,fish.number);
