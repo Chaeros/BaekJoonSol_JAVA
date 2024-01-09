@@ -68,6 +68,7 @@ public class BOJ19236 {
         }
 
         for(int i=1;i<=3;++i){
+            System.out.println("new==========");
             ArrayList<Fish> tempFishes = copyFishes(fishes);
             int[][] tempMap = copyMap(map);
             tempFishes = moveFishes(tempFishes,tempMap);
@@ -86,44 +87,46 @@ public class BOJ19236 {
                 tempShark.y=my;
                 tempShark.direction=fish.direction;
 
-                printMap(tempMap);
+//                printMap(tempMap);
                 dfs(tempShark,tempMap,tempFishes);
             }
         }
     }
 
     static ArrayList<Fish> moveFishes(ArrayList<Fish> fishes, int[][] map){
+        ArrayList<Fish> tempFishes = copyFishes(fishes);
         for(int i=0;i<16;++i){
-            Fish fish = fishes.get(i);
+            Fish fish = tempFishes.get(i);
 
-            if(!fishes.get(i).isAlive) continue;
+            if(!tempFishes.get(i).isAlive) continue;
 
             for(int j=0;j<8;++j){
 //                System.out.println("rotate="+(fish.direction+j)%8);
                 int mx = fish.x+dx[(fish.direction+j)%8];
                 int my = fish.y+dy[(fish.direction+j)%8];
 
-                if(mx<0 || mx>=4 || my<0 || my>=4 || map[mx][my]==-1) continue;
-
-                if(map[mx][my]==0){
-                    map[fish.x][fish.y]=0;
-                    map[mx][my]=fish.number;
-                    fish.x=mx;
-                    fish.y=my;
+                if(mx>=0 && mx<4 && my>=0 && my<4 && map[mx][my]!=-1) {
+                    if(map[mx][my]==0){
+                        map[fish.x][fish.y]=0;
+                        map[mx][my]=fish.number;
+                        fish.x=mx;
+                        fish.y=my;
+                    }
+                    else if(map[mx][my]>0){
+                        Fish fish2 = tempFishes.get(map[mx][my]-1);
+                        fish2.x=fish.x;
+                        fish2.y=fish.y;
+                        map[mx][my]=fish.number;
+                        map[fish.x][fish.y]=fish2.number;
+                        fish.x=mx;
+                        fish.y=my;
+                    }
+                    break;
                 }
-                else if(map[mx][my]>0){
-                    Fish fish2 = fishes.get(map[mx][my]-1);
-                    fish2.x=fish.x;
-                    fish2.y=fish.y;
-                    map[mx][my]=fish.number;
-                    map[fish.x][fish.y]=fish2.number;
-                    fish.x=mx;
-                    fish.y=my;
-                }
-                break;
             }
+            printMap(map);
         }
-        return fishes;
+        return tempFishes;
     }
 
     public static void main(String[] args) throws IOException {
