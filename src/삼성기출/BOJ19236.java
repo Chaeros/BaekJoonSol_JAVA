@@ -1,170 +1,122 @@
 package 삼성기출;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 public class BOJ19236 {
-    static class Shark{
+
+    public static class Fish{
         int x;
         int y;
         int direction;
-        int eatingSum;
-        public Shark(int x,int y,int direction,int eatingSum){
+        public Fish(int x,int y,int direction){
             this.x=x;
             this.y=y;
             this.direction=direction;
-            this.eatingSum=eatingSum;
         }
     }
 
-    static class Fish{
-        int x;
-        int y;
-        int number;
-        int direction;
-        boolean isAlive;
-        public Fish(int x,int y,int number,int direction,boolean isAlive){
-            this.x=x;
-            this.y=y;
-            this.number=number;
-            this.direction=direction;
-            this.isAlive=isAlive;
-        }
-    }
+    public static int result;
+    public static int[] dx = {-1, -1, 0, 1, 1, 1, 0, -1};
+    public static int[] dy = {0, -1, -1, -1, 0, 1, 1, 1};
 
-    static int maxSum=0;
-    static int dx[]={-1,-1,0,1,1,1,0,-1};
-    static int dy[]={0,-1,-1,-1,0,1,1,1};
-
-    static ArrayList<Fish> copyFishes(ArrayList<Fish> fishes){
-        ArrayList<Fish> tempFishes = new ArrayList<>();
-        fishes.forEach(e->tempFishes.add(new Fish(e.x,e.y,e.number,e.direction,e.isAlive)));
-        return tempFishes;
-    }
-
-    static int[][] copyMap(int[][] map){
-        int tempMap[][] = new int[4][4];
-        for(int i=0;i<4;++i){
-            System.arraycopy(map[i],0,tempMap[i],0,map[i].length);
-        }
-        return tempMap;
-    }
-
-    static void printMap(int[][] map){
-        System.out.println("================");
-        for(int i=0;i<4;++i){
-            for(int j=0;j<4;++j){
-                System.out.print(map[i][j]+" ");
-            }
-            System.out.println();
-        }
-        System.out.println("================");
-    }
-
-    static void dfs(Shark shark,int map[][],ArrayList<Fish> fishes){
-        if(maxSum<shark.eatingSum){
-            maxSum=shark.eatingSum;
-            System.out.println("[x="+shark.x+" y="+shark.y+"] maxSum="+maxSum);
-        }
-
-        for(int i=1;i<=3;++i){
-            System.out.println("new==========");
-            ArrayList<Fish> tempFishes = copyFishes(fishes);
-            int[][] tempMap = copyMap(map);
-            tempFishes = moveFishes(tempFishes,tempMap);
-            Shark tempShark = new Shark(shark.x,shark.y,shark.direction,shark.eatingSum);
-
-            int mx = tempShark.x+dx[tempShark.direction]*i;
-            int my = tempShark.y+dy[tempShark.direction]*i;
-
-            if(mx>=0 && mx<4 && my>=0 && my<4 && tempMap[mx][my]>0){
-                tempMap[tempShark.x][tempShark.y]=0;
-                tempShark.eatingSum+=tempMap[mx][my];
-                Fish fish = tempFishes.get(tempMap[mx][my]-1);
-                fish.isAlive=false;
-                tempMap[mx][my]=-1;
-                tempShark.x=mx;
-                tempShark.y=my;
-                tempShark.direction=fish.direction;
-
-//                printMap(tempMap);
-                dfs(tempShark,tempMap,tempFishes);
-            }
-        }
-    }
-
-    static ArrayList<Fish> moveFishes(ArrayList<Fish> fishes, int[][] map){
-        ArrayList<Fish> tempFishes = copyFishes(fishes);
-        for(int i=0;i<16;++i){
-            Fish fish = tempFishes.get(i);
-
-            if(!tempFishes.get(i).isAlive) continue;
-
-            for(int j=0;j<8;++j){
-//                System.out.println("rotate="+(fish.direction+j)%8);
-                int mx = fish.x+dx[(fish.direction+j)%8];
-                int my = fish.y+dy[(fish.direction+j)%8];
-
-                if(mx>=0 && mx<4 && my>=0 && my<4 && map[mx][my]!=-1) {
-                    if(map[mx][my]==0){
-                        map[fish.x][fish.y]=0;
-                        map[mx][my]=fish.number;
-                        fish.x=mx;
-                        fish.y=my;
-                    }
-                    else if(map[mx][my]>0){
-                        Fish fish2 = tempFishes.get(map[mx][my]-1);
-                        fish2.x=fish.x;
-                        fish2.y=fish.y;
-                        map[mx][my]=fish.number;
-                        map[fish.x][fish.y]=fish2.number;
-                        fish.x=mx;
-                        fish.y=my;
-                    }
-                    break;
-                }
-            }
-            printMap(map);
-        }
-        return tempFishes;
-    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st;
-
-        ArrayList<Fish> fishes = new ArrayList<>();
-        int map[][]=new int[4][4];
+        int map[][] = new int[4][4];
+        HashMap<Integer,Fish> hash = new HashMap<>();
 
         for(int i=0;i<4;++i){
             st = new StringTokenizer(br.readLine());
             for(int j=0;j<4;++j){
                 int number = Integer.parseInt(st.nextToken());
-                int direction = Integer.parseInt(st.nextToken())-1;
-                fishes.add(new Fish(i,j,number,direction,true));
+                int direction = Integer.parseInt(st.nextToken());
                 map[i][j]=number;
+                hash.put(number,new Fish(i,j,direction-1));
             }
         }
 
-        Collections.sort(fishes, new Comparator<Fish>(){
-            @Override
-            public int compare(Fish o1, Fish o2) {
-                return o1.number-o2.number;
-            }
-        });
+        int sx=0;
+        int sy=0;
+        Fish first = hash.get(map[0][0]);
+        result=map[0][0];
+        int sd=first.direction;
+        int number=map[0][0];
+        map[0][0]=0;
+        hash.remove(number);
 
-        System.out.println("originMap>>");
-        printMap(map);
-
-        Fish fish = fishes.get(map[0][0]-1);
-        Shark shark = new Shark(0,0,fish.direction,fish.number);
-        map[0][0]=-1;
-        fish.isAlive=false;
-
-        dfs(shark,map,fishes);
-        bw.write(maxSum+"\n");
+        dfs(map,hash,number,new Fish(sx,sy,sd));
+        bw.write(result+"\n");
         bw.flush();
         bw.close();
     }
+
+    public static void dfs(int[][] map, HashMap<Integer,Fish> hash,int sum, Fish shark){
+        result=Math.max(result,sum);
+
+        int[][] map_copy = new int[4][4];
+        for(int i=0;i<4;++i){
+            map_copy[i]=map[i].clone();
+        }
+        HashMap<Integer,Fish> hash_copy = (HashMap<Integer, Fish>) hash.clone();
+
+        for(int i=1;i<=16;++i){
+            if(!hash.containsKey(i)) continue;
+            Fish fish = hash_copy.get(i);
+            if(map[fish.x][fish.y]==0) continue;
+
+            int direction = fish.direction;
+            int turn_cnt=0;
+            boolean isPossibleMove=false;
+            int mx=fish.x;
+            int my=fish.y;
+
+            while(turn_cnt++ < 8) {
+                mx = fish.x + dx[direction];
+                my = fish.y + dy[direction];
+                if(mx < 0 || mx >= 4 || my < 0 || my >= 4 || (mx == shark.x && my == shark.y)) {
+                    direction = (direction+1) % 8;
+                } else {
+                    isPossibleMove = true;
+                    break;
+                }
+            }
+
+            if(isPossibleMove){
+                if(map_copy[mx][my]!=0){
+                    map_copy[fish.x][fish.y]=map_copy[mx][my];
+                    Fish objectFish = hash_copy.get(map_copy[mx][my]);
+                    hash_copy.put(map_copy[mx][my],new Fish(fish.x,fish.y,objectFish.direction));
+                    map_copy[mx][my]=i;
+                    hash_copy.put(i,new Fish(mx,my,direction));
+                }
+                else{
+                    map_copy[mx][my]=i;
+                    hash_copy.put(i,new Fish(mx,my,direction));
+                    map_copy[fish.x][fish.y]=0;
+                }
+            }
+        }
+
+        for(int i=1;i<=4;++i){
+            int mx = shark.x+dx[shark.direction]*i;
+            int my = shark.y+dy[shark.direction]*i;
+
+            if(mx<0 || mx>=4 || my<0 || my>= 4) break;
+
+            if(map_copy[mx][my] != 0){
+                int number = map_copy[mx][my];
+                map_copy[mx][my]=0;
+                int direction = hash_copy.get(number).direction;
+                hash_copy.remove(number);
+                dfs(map_copy,hash_copy,sum+number,new Fish(mx,my,direction));
+                hash_copy.put(number,new Fish(mx,my,direction));
+                map_copy[mx][my]=number;
+            }
+        }
+    }
+
 }

@@ -1,93 +1,127 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
-class Main {
 
-    static int N;
-    static int map[][];
-    static boolean visited[][];
-
-    static class Position{
+public class Main {
+    public static int[] dx = {-1, -1, 0, 1, 1, 1, 0, -1};
+    public static int[] dy = {0, -1, -1, -1, 0, 1, 1, 1};
+    public static int ans;
+    public static class Fish {
         int x;
         int y;
-        public Position(int x, int y) {
+        int dir;
+        public Fish(int x, int y, int dir) {
             this.x = x;
             this.y = y;
+            this.dir = dir;
         }
     }
-
-    static int dx[] = {-1,0,1,0};
-    static int dy[] = {0,1,0,-1};
-
-    static int resultSize=0;
-
-    static ArrayList<Integer> resultList = new ArrayList<>();
-
-    static void bfs(int x,int y){
-        Queue<Position> q = new LinkedList<>();
-        q.offer(new Position(x,y));
-        visited[x][y]=true;
-        int size=1;
-
-        while(!q.isEmpty()){
-            Position now = q.poll();
-
-            for(int i=0;i<4;++i){
-                int mx = now.x+dx[i];
-                int my = now.y+dy[i];
-
-                if(mx>=N || mx<0 || my>=N || my<0) continue;
-                if(visited[mx][my]) continue;
-                if(map[now.x][now.y]!=map[mx][my]) continue;
-                visited[mx][my]=true;
-                q.offer(new Position(mx,my));
-                ++size;
-            }
-        }
-
-        if(map[x][y]==1){
-            resultList.add(size);
-        }
-    }
-
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = null;
+        int[][] map = new int[4][4];
+        HashMap<Integer, Fish> hash = new HashMap<>();
 
-        N = Integer.parseInt(br.readLine());
-
-        map = new int[N][N];
-        visited = new boolean[N][N];
-
-        for(int i=0;i<N;++i){
-            String str = br.readLine();
-            for(int j=0;j<N;++j){
-                map[i][j]=Integer.parseInt(String.valueOf(str.charAt(j)));
+        for(int i=0;i<4;i++) {
+            st = new StringTokenizer(br.readLine(), " ");
+            for(int j=0;j<4;j++) {
+                int num = Integer.parseInt(st.nextToken());
+                int dir = Integer.parseInt(st.nextToken());
+                map[i][j] = num;
+                hash.put(num, new Fish(i, j, dir-1));
             }
         }
 
-        for(int i=0;i<N;++i){
-            for(int j=0;j<N;++j){
-                if(!visited[i][j]){
-                    bfs(i,j);
-                    if(map[i][j]==1) resultSize++;
+        int s_x = 0;
+        int s_y = 0;
+        Fish first = hash.get(map[0][0]);
+        ans = map[0][0];
+        int s_dir = first.dir;
+        int num = map[0][0];
+        map[0][0] = 0;
+        hash.remove(num);
+
+
+        dfs(map, hash, num, new Fish(s_x, s_y, s_dir));
+        System.out.println(ans);
+
+
+    }
+
+    public static void dfs(int[][] map, HashMap<Integer, Fish> hash, int sum, Fish shark) {
+        ans = Math.max(ans, sum);
+
+        int[][] map_copy = new int[4][4];
+        for(int i=0;i<4;i++) {
+            map_copy[i] = map[i].clone();
+        }
+        HashMap<Integer, Fish> hash_copy = (HashMap<Integer, Fish>) hash.clone();
+
+        // 물고기의 이동
+        for(int k=1;k<=16;k++) {
+            if(!hash.containsKey(k)) continue;
+            Fish fish = hash_copy.get(k);
+            if(map[fish.x][fish.y] == 0) continue;
+
+            int dir = fish.dir;
+            int turn_cnt = 0;
+            boolean check = false;
+            int nx = fish.x;
+            int ny = fish.y;
+            while(turn_cnt++ < 8) {
+                nx = fish.x + dx[dir];
+                ny = fish.y + dy[dir];
+                if(nx < 0 || nx >= 4 || ny < 0 || ny >= 4 || (nx == shark.x && ny == shark.y)) {
+                    dir = (dir+1) % 8;
+                } else {
+                    check = true;
+                    break;
                 }
             }
-        }
-        Collections.sort(resultList);
+            // 물고기 이동가능
+            if(check) {
+                if(map_copy[nx][ny] != 0) {
+                    map_copy[fish.x][fish.y] = map_copy[nx][ny];
+                    Fish move_fish = hash_copy.get(map_copy[nx][ny]);
+                    hash_copy.put(map_copy[nx][ny], new Fish(fish.x, fish.y, move_fish.dir));
+                    map_copy[nx][ny] = k;
+                    hash_copy.put(k, new Fish(nx, ny, dir));
 
-        bw.write(resultSize+"\n");
-        String result="";
-        for(int x:resultList){
-            result+=String.valueOf(x);
-            result+=" ";
+                } else {
+                    map_copy[nx][ny] = k;
+                    hash_copy.put(k, new Fish(nx, ny, dir));
+                    map_copy[fish.x][fish.y] = 0;
+                }
+            }
+
         }
-        if(result.length()>0){
-            result = result.substring(0,result.length()-1);
-            bw.write(result);
+
+
+
+        // 상어 이동 가능 ?
+        for(int m=1;m<=4;m++) {
+            int nx = shark.x + dx[shark.dir] * m;
+            int ny = shark.y + dy[shark.dir] * m;
+
+            if(nx < 0 || nx >= 4 || ny < 0 || ny >= 4) break;
+            if(map_copy[nx][ny] != 0) {
+                int num = map_copy[nx][ny];
+                map_copy[nx][ny] = 0;
+                int dir = hash_copy.get(num).dir;
+                hash_copy.remove(num);
+                dfs(map_copy, hash_copy, sum+num, new Fish(nx, ny, dir));
+                hash_copy.put(num, new Fish(nx, ny, dir));
+                map_copy[nx][ny] = num;
+            }
+
         }
-        bw.flush();
-        bw.close();
+
     }
+
+
+
 }
