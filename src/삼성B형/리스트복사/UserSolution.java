@@ -32,13 +32,13 @@ public class UserSolution {
         address=new HashMap<String, Integer>();
         changeNumber=0;
         preChange=new int[110001];
-        currentChange=new Pair[6001];
-        lastChange=new int[110001];
+        currentChange=new Pair[110001];
+        lastChange=new int[6001];
     }
 
     String getName(char mName[]) {
         String name="";
-        for(int i=0;i<mName.length;++i) {
+        for(int i=0;mName[i]!=0;++i) {
             name+=mName[i];
         }
         return name;
@@ -60,7 +60,7 @@ public class UserSolution {
     void copyList(char mDest[], char mSrc[], boolean mCopy) {
         if(mCopy) {
             address.put(getName(mDest),addressNumber);
-            ++changeNumber;
+            ++addressNumber;
 
             preChange[changeNumber]=lastChange[address.get(getName(mSrc))];
             currentChange[changeNumber]=new Pair(-1,-1);
@@ -68,7 +68,7 @@ public class UserSolution {
             ++changeNumber;
         }
         else {
-            address.put(getName(mDest),lastChange[address.get(getName(mSrc))]);
+            address.put(getName(mDest),address.get(getName(mSrc)));
         }
     }
 
